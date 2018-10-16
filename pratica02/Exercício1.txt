@@ -1,0 +1,20 @@
+Exercício 1: Análise das semelhanças e diferenças nos sistemas de troca de mensagens em TCP e em UDC.
+
+
+
+Ambos sistemas utilizam o mesmo tipo de domínio: AF_INET. O qual permite a comunicação dos processos por quaisquer dois hosts na internet.
+Já em relação aos sockets, o sistema TCP utiliza stream (SOCK_STREAM), tornando a comunicação mais confiável e segura, com garantia de entrega dos pacotes e mantendo a ordem de envio. Como consequência, esse tipo de comunicação é mais lenta quando comparada com o tipo Datagram (SOCK_DGRAM) que é utilizado no sistema UDC. O tipo Datagram não exige garantia de entraga de pacatos, o que torna a comunicação muito mais rápida.
+
+--> Inicialização dos sockets
+Tanto no servidor UDC quanto no TCP, a inicialização do socket é feita da mesma forma e utilizando o mesmo tipo de estrutura de dados na qual são atribuidos valores a alguns atributos, como "sin_family", "sin_addr" e "sin_port".
+Já no arquivo de Cliente, há algumas diferenças como a necessidade de preparar o endereço do cliente UDC enquanto que no cliente TCP é preciso somente realizar a conexão com o servidor.
+
+--> Envio de mensagens (CLIENTE)
+Na troca de mensagens utilizando TCP, o conteúdo da mensagem é armazenado em um buffer e, após, através da função "write", a mensagem é enviada ao servidor. Já utilizando o cliente UDP, após enviar a mensagem utilizando a função "sento", o cliente aguarda a resposta do servidor por meio da chamada "recvfrom", uma vez que não há garantia de entrega em serviços Datagram.
+
+-->Recebimento de mensagens (SERVIDOR)
+No receive das mensagens, os servidores também se comportam de maneiras distintas. O servidor em UDP, utiliza a chamada "recvfrom" para receber a mensagem do cliente e, após, a chamada "sento" para notificar o cliente acerca do recebimento do pacote e desbloquear o mesmo. Ou seja, o comportamento é similiar ao do cliente, mudando apenas a ordem das chamadas: no cliente, primeiro o send e após o recieve. No servidor, primeiro o recieve e após o send para notificar e desbloquear. 
+Já o servidor em TCP, primeiro habilita o socket para receber mensagens(função "listen") e depois fica em loop recebendo as conexões dos clientes possibilitando a troca de mensagens.
+
+
+
